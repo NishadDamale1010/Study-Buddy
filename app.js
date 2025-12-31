@@ -14,7 +14,10 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
 const expressLayouts = require("express-ejs-layouts");
-const MongoStore = require("connect-mongo");
+// connect-mongo v6 exports: { MongoStore, default, ... }
+// Use MongoStore.MongoStore as the constructor
+const connectMongo = require("connect-mongo");
+const MongoStore = connectMongo.MongoStore || connectMongo.default || connectMongo;
 
 app.set("trust proxy", 1);
 
@@ -35,7 +38,7 @@ if (missingEnvVars.length > 0) {
 // ======================
 // DATABASE CONNECTION
 // ======================
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = process.env.MONGO_URI; 
 
 if (!mongoURI) {
     console.error("❌ MONGO_URI is not defined");
@@ -79,7 +82,7 @@ mongoose.connection.on("error", (err) => {
 
 mongoose.connection.on("disconnected", () => {
     console.warn("⚠️  Mongoose disconnected from MongoDB");
-});
+    });
 
 // ======================
 // SESSION CONFIG
@@ -89,7 +92,7 @@ const sessionConfig = {
     secret: process.env.SESSION_SECRET || "devsecret",
     resave: false,
     saveUninitialized: false,
-    store: mongoURI ? MongoStore.create({
+    store: mongoURI ? new MongoStore({
         mongoUrl: mongoURI,
         touchAfter: 24 * 3600,
         ttl: 7 * 24 * 60 * 60 // 7 days
