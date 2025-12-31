@@ -1,18 +1,103 @@
-<h1>Your Notes</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<a href="/notes/new">Add Note</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes | Study Buddy</title>
 
-<ul>
-  <% for(let note of notes){ %>
-    <li>
-      <strong><%= note.title %></strong> (<%= note.tag %>)
-      <br>
-      <%= note.content.substring(0, 100) %>...
-      <br>
-      <a href="/notes/<%= note._id %>/edit">Edit</a>
-      <form action="/notes/<%= note._id %>?_method=DELETE" method="POST" style="display:inline;">
-        <button>Delete</button>
-      </form>
-    </li>
-  <% } %>
-</ul>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .note-card {
+            transition: transform 0.2s;
+        }
+
+        .note-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-card">
+
+
+        <div class="container my-5">
+            <% if (success && success.length) { %>
+                <div class="alert alert-success">
+                    <%= success[0] %>
+                </div>
+                <% } %>
+
+                    <% if (error && error.length) { %>
+                        <div class="alert alert-danger">
+                            <%= error[0] %>
+                        </div>
+                        <% } %>
+
+                            <h1 class="text-center mb-4">📝 My Notes</h1>
+
+                            <!-- ADD NOTE -->
+                            <div class="card shadow-sm mb-5">
+                                <div class="card-body">
+                                    <h5 class="card-title">Add a new note</h5>
+
+                                    <form action="/notes" method="POST">
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="note[title]"
+                                                placeholder="Title" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <textarea class="form-control" name="note[content]" rows="3"
+                                                placeholder="Write your note here..." required></textarea>
+                                        </div>
+
+                                        <button class="btn btn-primary">Add Note</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <h2 class="mb-4">Your Notes</h2>
+
+                            <!-- NOTES GRID -->
+                            <div class="row g-3">
+                                <% notes.forEach(note=> { %>
+                                    <div class="col-md-4">
+                                        <div class="card note-card shadow-sm h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <%= note.title %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <%= note.content %>
+                                                </p>
+                                            </div>
+
+                                            <div class="card-footer d-flex justify-content-between">
+                                                <a href="/notes/<%= note._id %>/edit" class="btn btn-sm btn-warning">
+                                                    Edit
+                                                </a>
+
+                                                <form action="/notes/<%= note._id %>?_method=DELETE" method="POST">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+        </div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</body>
+
+</html>

@@ -1,9 +1,10 @@
-let focusTime = 25 * 60;   // seconds
-let breakTime = 5 * 60;
+let focusTime = 25 * 60;
+let shortBreak = 5 * 60;
+let longBreak = 15 * 60;
 
 let time = focusTime;
 let timer = null;
-let isFocus = true;
+let isRunning = false;
 
 const timerDisplay = document.getElementById("timer");
 const modeDisplay = document.getElementById("mode");
@@ -20,37 +21,50 @@ function updateDisplay() {
 }
 
 function startTimer() {
-    if (timer) return;
+    if (isRunning) return;
+    isRunning = true;
 
     timer = setInterval(() => {
         time--;
+        updateDisplay();
 
         if (time <= 0) {
             clearInterval(timer);
-            timer = null;
-
-            isFocus = !isFocus;
-            time = isFocus ? focusTime : breakTime;
-            modeDisplay.innerText = isFocus ? "Focus Time" : "Break Time";
-
-            updateDisplay();
+            isRunning = false;
         }
-
-        updateDisplay();
     }, 1000);
 }
 
 function pauseTimer() {
     clearInterval(timer);
-    timer = null;
+    isRunning = false;
 }
 
 function resetTimer() {
-    clearInterval(timer);
-    timer = null;
-    isFocus = true;
+    pauseTimer();
     time = focusTime;
     modeDisplay.innerText = "Focus Time";
+    updateDisplay();
+}
+
+function setFocus() {
+    pauseTimer();
+    time = focusTime;
+    modeDisplay.innerText = "Focus Time";
+    updateDisplay();
+}
+
+function setShortBreak() {
+    pauseTimer();
+    time = shortBreak;
+    modeDisplay.innerText = "Short Break";
+    updateDisplay();
+}
+
+function setLongBreak() {
+    pauseTimer();
+    time = longBreak;
+    modeDisplay.innerText = "Long Break";
     updateDisplay();
 }
 

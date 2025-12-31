@@ -1,32 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard | Study Buddy</title>
-</head>
-<body>
+<div class="content-card">
 
-    <h1>📊 Study Buddy Dashboard</h1>
+    <h1 class="mb-4">📊 Dashboard</h1>
 
-    <hr>
+    <div class="row g-4">
 
-    <h2>📌 Todos</h2>
-    <p>Total Todos: <strong><%= totalTodos %></strong></p>
-    <p>Pending Todos: <strong><%= pendingTodos %></strong></p>
-    <a href="/todos">Go to Todos</a>
+        <div class="col-md-4">
+            <div class="card dashboard-card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Todos</h5>
+                    <p>Total: <strong>
+                            <%= totalTodos %>
+                        </strong></p>
+                    <p>Pending: <strong>
+                            <%= pendingTodos %>
+                        </strong></p>
+                    <a href="/todos" class="btn btn-outline-light btn-sm">View Todos</a>
+                </div>
+            </div>
+        </div>
 
-    <hr>
+        <div class="col-md-4">
+            <div class="card dashboard-card text-white bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Notes</h5>
+                    <p>Total Notes: <strong>
+                            <%= totalNotes %>
+                        </strong></p>
+                    <a href="/notes" class="btn btn-outline-light btn-sm">View Notes</a>
+                </div>
+            </div>
+        </div>
 
-    <h2>📝 Notes</h2>
-    <p>Total Notes: <strong><%= totalNotes %></strong></p>
-    <a href="/notes">Go to Notes</a>
+        <div class="col-md-4">
+            <div class="card dashboard-card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Pomodoro</h5>
+                    <p>Focus sessions: <em>Coming soon</em></p>
+                    <a href="/pomodoro" class="btn btn-dark btn-sm">Start Timer</a>
+                </div>
+            </div>
+        </div>
 
-    <hr>
+    </div>
 
-    <h2>🍅 Pomodoro</h2>
-    <p>Focus sessions: <em>(coming soon)</em></p>
-    <a href="/pomodoro">Start Pomodoro</a>
-
-    <hr>
-
-</body>
-</html>
+</div>

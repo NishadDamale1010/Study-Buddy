@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy | Login & Register</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-card {
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .auth-img {
+            background: url("/images/study-buddy-auth.png");
+            background-size: cover;
+            background-position: center;
+            min-height: 100%;
+            position: relative;
+        }
+
+        .auth-overlay {
+            background: rgba(0, 0, 0, 0.45);
+            color: white;
+            height: 100%;
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            <div class="card auth-card shadow-lg">
+                <div class="row g-0">
+
+                    <!-- LEFT IMAGE / BRANDING -->
+                    <div class="col-md-6 d-none d-md-block auth-img">
+                        <div class="auth-overlay">
+                            <h2 class="fw-bold">Study Buddy</h2>
+                            <p class="mb-0">Plan. Focus. Achieve.</p>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT AUTH FORMS -->
+                    <div class="col-md-6 p-4 p-lg-5 bg-white">
+
+                        <!-- LOGIN FORM -->
+                        <div id="login-form">
+                            <h3 class="fw-bold mb-3">Welcome Back 👋</h3>
+                            <p class="text-muted mb-4">Sign in to continue.</p>
+
+                            <form action="/login" method="POST">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                    <label>Username</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                    <label>Password</label>
+                                </div>
+
+                                <button class="btn btn-primary w-100 py-2 mb-3">
+                                    Sign In
+                                </button>
+
+                                <p class="text-center mb-0">
+                                    Don't have an account?
+                                    <a href="#" onclick="toggleAuth()" class="fw-bold text-decoration-none">
+                                        Sign up
+                                    </a>
+                                </p>
+                            </form>
+                        </div>
+
+                        <!-- REGISTER FORM -->
+                        <div id="register-form" class="hidden">
+                            <h3 class="fw-bold mb-3">Create Account 🚀</h3>
+                            <p class="text-muted mb-4">Join Study Buddy today.</p>
+
+                            <form action="/register" method="POST">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                    <label>Username</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                    <label>Email</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                    <label>Password</label>
+                                </div>
+
+                                <button class="btn btn-success w-100 py-2 mb-3">
+                                    Register
+                                </button>
+
+                                <p class="text-center mb-0">
+                                    Already have an account?
+                                    <a href="#" onclick="toggleAuth()" class="fw-bold text-decoration-none">
+                                        Login
+                                    </a>
+                                </p>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAuth() {
+        document.getElementById("login-form").classList.toggle("hidden");
+        document.getElementById("register-form").classList.toggle("hidden");
+    }
+</script>
+
+</body>
+</html>
