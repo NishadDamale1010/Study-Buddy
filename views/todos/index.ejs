@@ -1,0 +1,22 @@
+<h1>Todo List</h1>
+
+<a href="/todos/new">Add New Task</a>
+
+<ul>
+    <% for(let todo of todos){ %>
+        <li>
+            <form action="/todos/<%= todo._id %>?_method=PUT" method="POST" style="display:inline;">
+                <button>✔</button>
+            </form>
+
+            <span class="<%= todo.completed ? 'completed' : '' %>">
+
+                <%= todo.title %>
+            </span>
+
+            <form action="/todos/<%= todo._id %>?_method=DELETE" method="POST" style="display:inline;">
+                <button>❌</button>
+            </form>
+        </li>
+        <% } %>
+</ul>
