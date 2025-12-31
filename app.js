@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 
 // ROUTES
+const dashboardRoutes = require("./routes/dashboard");
 const todoRoutes = require("./routes/todos");
 const noteRoutes = require("./routes/notes");
 const pomodoroRoutes = require("./routes/pomodoro");
@@ -34,9 +35,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTES
 // ======================
 app.get("/", (req, res) => {
-    res.redirect("/pomodoro");
+    res.redirect("/dashboard");
 });
 
+app.use("/dashboard", dashboardRoutes);
 app.use("/todos", todoRoutes);
 app.use("/notes", noteRoutes);
 app.use("/pomodoro", pomodoroRoutes);
