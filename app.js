@@ -6,17 +6,18 @@ const methodOverride = require("method-override");
 
 // ROUTES
 const todoRoutes = require("./routes/todos");
+const noteRoutes = require("./routes/notes");
 
 // ======================
 // DATABASE
 // ======================
 mongoose.connect("mongodb://localhost:27017/study-buddy")
-    .then(() => {
-        console.log("MongoDB Connected");
-    })
-    .catch(err => {
-        console.log("Mongo Error:", err);
-    });
+.then(() => {
+    console.log("MongoDB Connected");
+})
+.catch(err => {
+    console.log("Mongo Error:", err);
+});
 
 // ======================
 // APP CONFIG
@@ -32,10 +33,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTES
 // ======================
 app.get("/", (req, res) => {
-    res.redirect("/todos");
+    res.redirect("/notes");
 });
 
 app.use("/todos", todoRoutes);
+app.use("/notes", noteRoutes);
+
 
 // ======================
 // SERVER
