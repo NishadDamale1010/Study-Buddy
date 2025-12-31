@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -13,19 +17,28 @@ const expressLayouts = require("express-ejs-layouts");
 
 
 const sessionConfig = {
-    name: "studybuddy",
-    secret: process.env.SESSION_SECRET || "thisIsASecret",
+    name: "studybuddy-session",
+    secret: process.env.SESSION_SECRET || "devsecret",
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: "lax"
     }
 };
 
 app.use(session(sessionConfig));
+
 app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currentUser = req.user;
+    next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -34,15 +47,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    next();
-});
-app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    next();
-});
+
 
 
 // ROUTES
@@ -56,7 +61,7 @@ const pomodoroRoutes = require("./routes/pomodoro");
 // ======================
 // DATABASE
 // ======================
-const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/study-buddy";
+const mongoURI = process.env.DB_URI || "mongodb://localhost:27017/study-buddy";
 mongoose.connect(mongoURI)
 .then(() => {
     console.log("MongoDB Connected");

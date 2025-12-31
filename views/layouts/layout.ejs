@@ -1,78 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
-    <title><%= typeof title !== "undefined" ? title : "Study Buddy" %></title>
+    <title>
+        <%= typeof title !=="undefined" ? title : "Study Buddy" %>
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- GLOBAL MODERN STYLES -->
+    <!-- GLOBAL STYLES -->
     <style>
-        /* Background */
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --text-main: #111827;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.95);
+            --text-main: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+        [data-theme="dark"] .navbar {
+        background-color: rgba(32, 34, 49, 0.9) !important;
+        backdrop-filter: blur(10px);
+        }
+
         body {
             min-height: 100vh;
             background:
-                radial-gradient(circle at top left, #e0e7ff, transparent 45%),
-                radial-gradient(circle at bottom right, #fce7f3, transparent 45%),
-                linear-gradient(180deg, #f8fafc, #f1f5f9);
+                radial-gradient(circle at top left, #6412f1, transparent 45%),
+                radial-gradient(circle at bottom right, #f90b5a, transparent 45%),
+                linear-gradient(180deg, var(--bg-main), var(--bg-main));
+            color: var(--text-main);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Page spacing */
         .page-wrapper {
             padding: 2rem 0;
         }
 
-        /* Main floating card */
         .content-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg-card);
             border-radius: 18px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 40px var(--shadow);
             padding: 2rem;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(14px);
+
         }
 
-        /* Hover animation */
         .hover-lift {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .hover-lift:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+            box-shadow: 0 20px 45px var(--shadow);
+        }
+
+        /* Dark-friendly alerts */
+        .alert {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: none;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- NAVBAR (ONLY HERE) -->
+    <!-- NAVBAR -->
     <%- include("../partials/navbar.ejs") %>
 
-    <!-- PAGE WRAPPER -->
-    <div class="container page-wrapper">
+        <!-- PAGE WRAPPER -->
+        <div class="container page-wrapper">
 
-        <!-- FLASH MESSAGES -->
-        <% if (error && error.length) { %>
-            <div class="alert alert-danger alert-dismissible fade show">
-                <%= error %>
-                <button class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <% } %>
+            <!-- FLASH -->
+            <% if (error && error.length) { %>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <%= error %>
+                        <button class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <% } %>
 
-        <% if (success && success.length) { %>
-            <div class="alert alert-success alert-dismissible fade show">
-                <%= success %>
-                <button class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <% } %>
+                    <% if (success && success.length) { %>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <%= success %>
+                                <button class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <% } %>
 
-        <!-- PAGE CONTENT -->
-        <%- body %>
+                            <!-- PAGE CONTENT -->
+                            <%- body %>
 
-    </div>
+        </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- DARK MODE SCRIPT -->
+        <script>
+            const root = document.documentElement;
+            const toggleBtn = document.getElementById("themeToggle");
+
+            function setTheme(theme) {
+                root.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+                if (toggleBtn) toggleBtn.innerText = theme === "dark" ? "☀️" : "🌙";
+            }
+
+            const savedTheme = localStorage.getItem("theme") || "light";
+            setTheme(savedTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", () => {
+                    const current = root.getAttribute("data-theme");
+                    setTheme(current === "dark" ? "light" : "dark");
+                });
+            }
+        </script>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

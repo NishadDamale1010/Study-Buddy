@@ -2,28 +2,22 @@ const express = require("express");
 const router = express.Router();
 const Note = require("../models/note");
 const { isLoggedIn } = require("../middleware");
+const { marked } = require("marked")
 
 router.get("/", isLoggedIn, async (req, res) => {
-    try {
-        const notes = await Note.find({ user: req.user._id });
-        res.render("notes/index", { notes });
-    } catch (err) {
-        req.flash("error", "Error loading notes");
-        res.redirect("/dashboard");
-    }
+    const notes = await Note.find({ author: req.user._id });
+    res.render("notes/index", { notes, marked });
 });
 
 router.post("/", isLoggedIn, async (req, res) => {
-    try {
-        const note = new Note(req.body.note);
-        note.user = req.user._id;
-        await note.save();
-        req.flash("success", "Note added 📝");
-        res.redirect("/notes");
-    } catch (err) {
-        req.flash("error", "Error adding note");
-        res.redirect("/notes");
-    }
+    const note = new Note({
+        title: req.body.title,
+        content: req.body.content,
+        author: req.user._id
+    });
+    await note.save();
+    req.flash("success", "Note added ✨");
+    res.redirect("/notes");
 });
 
 router.get("/:id/edit", isLoggedIn, async (req, res) => {
