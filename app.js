@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 // ROUTES
 const todoRoutes = require("./routes/todos");
 const noteRoutes = require("./routes/notes");
+const pomodoroRoutes = require("./routes/pomodoro");
 
 // ======================
 // DATABASE
@@ -33,11 +34,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTES
 // ======================
 app.get("/", (req, res) => {
-    res.redirect("/notes");
+    res.redirect("/pomodoro");
 });
 
 app.use("/todos", todoRoutes);
 app.use("/notes", noteRoutes);
+app.use("/pomodoro", pomodoroRoutes);
 
 
 // ======================
