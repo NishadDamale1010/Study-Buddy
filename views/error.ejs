@@ -1,0 +1,14 @@
+<div class="content-card text-center">
+    <h1 class="display-1 mb-4">⚠️</h1>
+    <h2 class="mb-3"><%= message || "Something went wrong!" %></h2>
+    <p class="text-muted mb-4">
+        <% if (typeof error !== 'undefined' && Object.keys(error).length > 0) { %>
+            <%= JSON.stringify(error, null, 2) %>
+        <% } else { %>
+            We're sorry, but something unexpected happened.
+        <% } %>
+    </p>
+    <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">Go Back</a>
+</div>
+
