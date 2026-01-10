@@ -14,8 +14,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
 const expressLayouts = require("express-ejs-layouts");
-// connect-mongo v6 exports: { MongoStore, default, ... }
-// Use MongoStore.MongoStore as the constructor
+
 const connectMongo = require("connect-mongo");
 const MongoStore = connectMongo.MongoStore || connectMongo.default || connectMongo;
 
@@ -47,19 +46,19 @@ if (!mongoURI) {
     }
 }
 
-// MongoDB connection options for production
+
 const mongooseOptions = {
-    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-    family: 4, // Use IPv4, skip trying IPv6
-    maxPoolSize: 10, // Maintain up to 10 socket connections
-    minPoolSize: 5, // Maintain at least 5 socket connections
-    retryWrites: true, // Retry write operations
-    w: 'majority', // Write concern
+    serverSelectionTimeoutMS: 5000, 
+    socketTimeoutMS: 45000, 
+    family: 4, 
+    maxPoolSize: 10, 
+    minPoolSize: 5, 
+    retryWrites: true, 
+    w: 'majority', 
 };
 
 // Connect to MongoDB
-mongoose.connect(mongoURI, mongooseOptions)
+mongoose.connect(mongoURI ||"mongodb://localhost:27017/study-buddy", mongooseOptions)
     .then(() => {
         console.log("✅ MongoDB Connected Successfully");
     })
@@ -175,7 +174,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     console.error("Error:", err);
     
-    // Don't leak error details in production
+    
     const errorDetails = process.env.NODE_ENV === "development" ? err : {};
     
     res.status(err.status || 500).render("error", {
@@ -197,7 +196,7 @@ const startServer = () => {
         console.log(`📝 Environment: ${process.env.NODE_ENV || "development"}`);
     });
 
-    // Graceful shutdown
+    
     const gracefulShutdown = async (signal) => {
         console.log(`\n${signal} received. Starting graceful shutdown...`);
         
@@ -214,7 +213,7 @@ const startServer = () => {
             }
         });
 
-        // Force shutdown after 10 seconds
+        
         setTimeout(() => {
             console.error("Forced shutdown after timeout");
             process.exit(1);
@@ -225,7 +224,7 @@ const startServer = () => {
     process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 };
 
-// In production, wait for MongoDB connection before starting server
+
 if (process.env.NODE_ENV === "production" && mongoURI) {
     mongoose.connection.once("connected", () => {
         startServer();

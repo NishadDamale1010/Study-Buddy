@@ -14,58 +14,80 @@ const pauseBtn = document.getElementById("pause");
 const resetBtn = document.getElementById("reset");
 
 function updateDisplay() {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    timerDisplay.innerText =
-        `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  timerDisplay.innerText =
+    `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function savePomodoroSession() {
+  fetch("/pomodoro/complete", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ duration: 25 }) // minutes
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Pomodoro saved");
+      }
+    })
+    .catch(err => console.error(err));
 }
 
 function startTimer() {
-    if (isRunning) return;
-    isRunning = true;
+  if (isRunning) return;
+  isRunning = true;
 
-    timer = setInterval(() => {
-        time--;
-        updateDisplay();
+  timer = setInterval(() => {
+    time--;
+    updateDisplay();
 
-        if (time <= 0) {
-            clearInterval(timer);
-            isRunning = false;
-        }
-    }, 1000);
+    if (time <= 0) {
+      clearInterval(timer);
+      isRunning = false;
+
+      // ✅ SAVE ONLY IF FOCUS SESSION
+      if (modeDisplay.innerText === "Focus Time") {
+        savePomodoroSession();
+      }
+    }
+  }, 1000);
 }
 
 function pauseTimer() {
-    clearInterval(timer);
-    isRunning = false;
+  clearInterval(timer);
+  isRunning = false;
 }
 
 function resetTimer() {
-    pauseTimer();
-    time = focusTime;
-    modeDisplay.innerText = "Focus Time";
-    updateDisplay();
+  pauseTimer();
+  time = focusTime;
+  modeDisplay.innerText = "Focus Time";
+  updateDisplay();
 }
 
 function setFocus() {
-    pauseTimer();
-    time = focusTime;
-    modeDisplay.innerText = "Focus Time";
-    updateDisplay();
+  pauseTimer();
+  time = focusTime;
+  modeDisplay.innerText = "Focus Time";
+  updateDisplay();
 }
 
 function setShortBreak() {
-    pauseTimer();
-    time = shortBreak;
-    modeDisplay.innerText = "Short Break";
-    updateDisplay();
+  pauseTimer();
+  time = shortBreak;
+  modeDisplay.innerText = "Short Break";
+  updateDisplay();
 }
 
 function setLongBreak() {
-    pauseTimer();
-    time = longBreak;
-    modeDisplay.innerText = "Long Break";
-    updateDisplay();
+  pauseTimer();
+  time = longBreak;
+  modeDisplay.innerText = "Long Break";
+  updateDisplay();
 }
 
 startBtn.addEventListener("click", startTimer);

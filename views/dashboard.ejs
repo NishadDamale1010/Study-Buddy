@@ -1,46 +1,220 @@
-<div class="content-card">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="cdn.jsdelivr.net" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="cdn.jsdelivr.net">
+    <!-- Modern Font: Inter -->
+    <link href="fonts.googleapis.com" rel="stylesheet">
 
-    <h1 class="mb-4">📊 Dashboard</h1>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary-accent: #6366f1; /* Indigo */
+            --success-accent: #10b981; /* Emerald */
+            --blur-strength: 16px;
+        }
 
-    <div class="row g-4">
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-        <div class="col-md-4">
-            <div class="card dashboard-card text-white bg-primary h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Todos</h5>
-                    <p>Total: <strong>
-                            <%= totalTodos %>
-                        </strong></p>
-                    <p>Pending: <strong>
-                            <%= pendingTodos %>
-                        </strong></p>
-                    <a href="/todos" class="btn btn-outline-light btn-sm">View Todos</a>
+        /* 2026 Background Ambient Orbs */
+        .bg-orb {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.15;
+        }
+        .orb-1 { background: var(--primary-accent); top: -10%; left: -10%; }
+        .orb-2 { background: #ec4899; bottom: -10%; right: -5%; }
+
+        /* Glassmorphism Card Core */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-strength));
+            -webkit-backdrop-filter: blur(var(--blur-strength));
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Typography & Components */
+        h2, h3, h5 { letter-spacing: -0.02em; }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-modern {
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: white; backdrop-filter: blur(5px); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+
+        .list-group-item {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            color: #e2e8f0;
+            padding: 1.2rem 0;
+        }
+
+        .badge-time {
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.7rem;
+            padding: 0.4em 0.8em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Grid Tweaks */
+        @media (max-width: 768px) {
+            .glass-card { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Accents -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <div class="container py-5">
+        <!-- Header Section -->
+        <header class="mb-5">
+            <div class="d-md-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold text-white mb-1">
+                        <%= greeting %>, <%= user.username %> 👋
+                    </h2>
+                    <p class="text-secondary">Ready to crush your goals for <%= new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) %>?</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <span class="glass-card py-2 px-3 fs-6">
+                        <i class="bi bi-calendar3 me-2 text-primary"></i> 2026 Schedule
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Section -->
+        <div class="row g-4 mb-5">
+            <div class="col-6 col-lg-3">
+                <div class="glass-card text-center text-lg-start">
+                    <p class="stat-label mb-1">Focus Time</p>
+                    <h3 class="fw-bold mb-0 text-white"><%= stats.focusTime %> <small class="fs-6 text-muted fw-normal">min</small></h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="glass-card text-center text-lg-start">
+                    <p class="stat-label mb-1">Tasks Done</p>
+                    <h3 class="fw-bold mb-0 text-white"><%= stats.todosCompleted %></h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="glass-card text-center text-lg-start">
+                    <p class="stat-label mb-1">Notes Synced</p>
+                    <h3 class="fw-bold mb-0 text-white"><%= stats.notesUpdated %></h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="glass-card text-center text-lg-start">
+                    <p class="stat-label mb-1">Sessions</p>
+                    <h3 class="fw-bold mb-0 text-white"><%= stats.sessions %></h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card dashboard-card text-white bg-success h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Notes</h5>
-                    <p>Total Notes: <strong>
-                            <%= totalNotes %>
-                        </strong></p>
-                    <a href="/notes" class="btn btn-outline-light btn-sm">View Notes</a>
+        <div class="row g-4">
+            <!-- Left: Recent Activity -->
+            <div class="col-lg-8">
+                <div class="glass-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0"><i class="bi bi-lightning-charge me-2 text-warning"></i>Recent Activity</h5>
+                        <a href="#" class="text-primary text-decoration-none small fw-semibold">View All</a>
+                    </div>
+
+                    <% if (activities.length === 0) { %>
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted opacity-25"></i>
+                            <p class="text-muted mt-3">Quiet day so far. Start a task!</p>
+                        </div>
+                    <% } else { %>
+                        <div class="list-group list-group-flush">
+                            <% activities.forEach(act => { %>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                                            <i class="bi bi-check2-circle text-primary"></i>
+                                        </div>
+                                        <span><%= act.message %></span>
+                                    </div>
+                                    <span class="badge rounded-pill badge-time text-muted"><%= act.time %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Right: Quick Actions -->
+            <div class="col-lg-4">
+                <div class="glass-card">
+                    <h5 class="fw-bold mb-4">Quick Actions</h5>
+                    <div class="d-grid gap-3">
+                        <a href="/todos" class="btn-modern btn-primary">
+                            <i class="bi bi-plus-lg"></i> New Todo
+                        </a>
+                        <a href="/notes" class="btn-modern btn-secondary">
+                            <i class="bi bi-journal-text"></i> New Note
+                        </a>
+                        <a href="/pomodoro" class="btn-modern btn-success">
+                            <i class="bi bi-play-fill"></i> Start Pomodoro
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4 p-3 rounded-4" style="background: rgba(99, 102, 241, 0.05); border: 1px dashed rgba(99, 102, 241, 0.2);">
+                        <p class="small text-secondary mb-0">
+                            <strong>Tip:</strong> You've completed 80% of your weekly goal. Keep it up!
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="card dashboard-card text-white bg-warning h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Pomodoro</h5>
-                    <p>Focus sessions: <em>Coming soon</em></p>
-                    <a href="/pomodoro" class="btn btn-dark btn-sm">Start Timer</a>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-</div>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="cdn.jsdelivr.net"></script>
+</body>
+</html>

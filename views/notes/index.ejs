@@ -1,103 +1,209 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes | Study Buddy</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="content-card">
 
     <style>
-        body {
-            background-color: #f8f9fa;
+        /* Notes page uses GLOBAL theme variables from layout */
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .note-card {
-            transition: transform 0.2s;
+        .notes-title {
+            font-size: 1.75rem;
+            font-weight: 700;
         }
 
-        .note-card:hover {
-            transform: scale(1.02);
+        /* Composer */
+        .composer {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .composer input,
+        .composer textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            resize: none;
+        }
+
+        .composer input {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .composer textarea {
+            opacity: 0.9;
+        }
+
+        .composer-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.75rem;
+        }
+
+        .composer button {
+            border-radius: 10px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Notes */
+        .note {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 1.1rem 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            box-shadow: 0 10px 25px var(--shadow);
+            transition: transform 0.15s ease;
+        }
+
+        .note:hover {
+            transform: translateY(-2px);
+        }
+
+        .note-title {
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .note-content {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            max-height: 6.4em;
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+        }
+
+        .note.expanded .note-content {
+            max-height: 100vh;
+        }
+
+        /* Read more */
+        .read-more {
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 0.4rem;
+            display: inline-block;
+            opacity: 0.75;
+        }
+
+        .read-more:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Actions */
+        .note-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .note:hover .note-actions {
+            opacity: 1;
+        }
+
+        .note-actions a,
+        .note-actions button {
+            font-size: 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+
+        .note-actions button:hover {
+            color: #dc2626;
+        }
+
+        .note-actions a:hover {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            opacity: 0.6;
+            margin-top: 4rem;
         }
     </style>
-</head>
 
-<body>
-    <div class="content-card">
-
-
-        <div class="container my-5">
-            <% if (success && success.length) { %>
-                <div class="alert alert-success">
-                    <%= success[0] %>
-                </div>
-                <% } %>
-
-                    <% if (error && error.length) { %>
-                        <div class="alert alert-danger">
-                            <%= error[0] %>
-                        </div>
-                        <% } %>
-
-                            <h1 class="text-center mb-4">📝 My Notes</h1>
-
-                            <!-- ADD NOTE -->
-                            <div class="card shadow-sm mb-5">
-                                <div class="card-body">
-                                    <h5 class="card-title">Add a new note</h5>
-
-                                    <form action="/notes" method="POST">
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="note[title]"
-                                                placeholder="Title" required>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <textarea class="form-control" name="note[content]" rows="3"
-                                                placeholder="Write your note here..." required></textarea>
-                                        </div>
-
-                                        <button class="btn btn-primary">Add Note</button>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <h2 class="mb-4">Your Notes</h2>
-
-                            <!-- NOTES GRID -->
-                            <div class="row g-3">
-                                <% notes.forEach(note=> { %>
-                                    <div class="col-md-4">
-                                        <div class="card note-card shadow-sm h-100">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    <%= note.title %>
-                                                </h5>
-                                                <p class="card-text">
-                                                    <%= note.content %>
-                                                </p>
-                                            </div>
-
-                                            <div class="card-footer d-flex justify-content-between">
-                                                <a href="/notes/<%= note._id %>/edit" class="btn btn-sm btn-warning">
-                                                    Edit
-                                                </a>
-
-                                                <form action="/notes/<%= note._id %>?_method=DELETE" method="POST">
-                                                    <button class="btn btn-sm btn-danger">Delete</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <% }) %>
-                            </div>
-        </div>
-
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- HEADER -->
+    <div class="notes-header">
+        <div class="notes-title">📝 Notes</div>
     </div>
-</body>
 
-</html>
+    <!-- ADD NOTE -->
+    <div class="composer">
+        <form action="/notes" method="POST">
+            <input name="note[title]" placeholder="Untitled note" required />
+            <textarea name="note[content]" rows="3" placeholder="Start writing…" required></textarea>
+
+            <div class="composer-footer">
+                <button class="btn btn-primary">Add note</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- NOTES LIST -->
+    <% if (notes.length === 0) { %>
+        <div class="empty-state">
+            No notes yet. Start capturing your ideas ✨
+        </div>
+    <% } %>
+
+    <% notes.forEach(note => { %>
+        <div class="note hover-lift">
+
+            <div class="note-actions">
+                <a href="/notes/<%= note._id %>/edit">Edit</a>
+                <form action="/notes/<%= note._id %>?_method=DELETE" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+
+            <div class="note-title"><%= note.title %></div>
+
+            <div class="note-content">
+                <%- marked(note.content) %>
+            </div>
+
+            <span class="read-more" onclick="toggleNote(this)">Read more</span>
+        </div>
+    <% }) %>
+
+</div>
+
+<script>
+    function toggleNote(el) {
+        const note = el.closest(".note");
+        note.classList.toggle("expanded");
+        el.innerText = note.classList.contains("expanded")
+            ? "Show less"
+            : "Read more";
+    }
+
+    // Auto-hide "Read more" for short notes
+    document.querySelectorAll(".note").forEach(note => {
+        const content = note.querySelector(".note-content");
+        const btn = note.querySelector(".read-more");
+        if (content.scrollHeight <= content.clientHeight + 5) {
+            btn.style.display = "none";
+        }
+    });
+</script>
